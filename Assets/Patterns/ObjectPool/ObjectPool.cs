@@ -7,12 +7,6 @@ namespace Game.Pattern
     public class ObjectPool : MonoBehaviour
     {
         #region Fields
-        /// <summary>
-        /// Backing Field of PooledObjectPrefab
-        /// TODO: Move this into PrefabFactory
-        /// </summary>
-        [SerializeField]
-        private GameObject _PooledObjectPrefab;
 
         /// <summary>
         /// The minimum amount of PooledObjects in the pool. 
@@ -38,8 +32,7 @@ namespace Game.Pattern
         #region Properties
 
         /// <summary>
-        /// Backing Field of PooledObjectPrefab
-        /// TODO: Move this into PrefabFactory
+        /// The Size of the pool
         /// </summary>
         public int Size
         {
@@ -59,13 +52,11 @@ namespace Game.Pattern
         protected virtual void OnEnable()
         {
             this._PooledObjects = new List<GameObject>();
+            GameObject obj;
 
             for (int i = 0; i < this._MinSize; i++)
             {
-                // TODO: Use PrefabFactory
-                GameObject obj = (GameObject)Instantiate(this._PooledObjectPrefab);
-                obj.transform.SetParent(this.transform);
-                this._PooledObjects.Add(obj);
+                obj = this.AddObject();
                 obj.SetActive(false);
             }
         }
@@ -125,18 +116,26 @@ namespace Game.Pattern
 
             if (i < this._MaxSize)
             {
-                // TODO: Use PrefabFactory
-                GameObject obj = (GameObject)Instantiate(this._PooledObjectPrefab);
-                obj.transform.SetParent(this.transform);
-                this._PooledObjects.Add(obj);
+                GameObject obj = this.AddObject();
                 return obj;
             }
 
-            Debug.Log(string.Format("Failed to instantiate more than {0} {1} in {2} Time: {3}", this._MaxSize.ToString(), this._PooledObjectPrefab.name, this.gameObject.name, Time.time.ToString()));
+            Debug.Log(string.Format("Failed to instantiate more than {0} PooledObject in {1} on time: {2}", this._MaxSize.ToString(), this.gameObject.name, Time.time.ToString()));
             return null;
         }
 
         #endregion Spawn
+
+        /// <summary>
+        /// Add a new Object in the pool. Note: Override this method if the PooledObject is a subclass
+        /// </summary>
+        protected virtual GameObject AddObject()
+        {
+            GameObject obj = PrefabFactory.Instance.InstantiatePrefab<PooledObject>().gameObject;
+            obj.transform.SetParent(this.transform);
+            this._PooledObjects.Add(obj);
+            return obj;
+        }
 
         /// <summary>
         /// Deactive all PooledObjects in the pool
