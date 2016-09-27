@@ -15,8 +15,7 @@ namespace Game.Pattern
         #region Prefab Fields 
 
         // Example
-        [SerializeField]
-        private GameObject PooledObjectPrefab;
+        public GameObject PooledObjectPrefab;
 
         #endregion Prefab Fields
 
@@ -34,6 +33,8 @@ namespace Game.Pattern
         void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
+
+            // Build Dictionary
             this.PrefabDictionary = new Dictionary<System.Type, GameObject>();
 
             // Note: Add all prefabs in PrefabDictionary below
@@ -45,21 +46,18 @@ namespace Game.Pattern
 
         #region Instantiate
 
-        public T InstantiatePrefab<T>()
+        public GameObject InstantiatePrefab(System.Type type)
         {
-            if (!this.PrefabDictionary.ContainsKey(typeof(T)))
-                throw new System.ApplicationException(string.Format("{0} prefab is expected to be set on PrefabFactory.", typeof(T).ToString()));
+            if (!this.PrefabDictionary.ContainsKey(type))
+                throw new System.ApplicationException(string.Format("{0} Field is expected to be set on PrefabFactory.", type.ToString()));
 
             GameObject value;
-            this.PrefabDictionary.TryGetValue(typeof(T), out value);
-            GameObject obj = Instantiate(value);
+            this.PrefabDictionary.TryGetValue(type, out value);
+            
+            if(value == null)
+                throw new System.ApplicationException(string.Format("{0} Prefab is expected to be set on PrefabFactory.", type.ToString()));
 
-            T t = obj.GetComponent<T>();
-
-            if(t == null)
-                throw new System.ApplicationException(string.Format("{0} component is expected to be set on {1} prefab.", typeof(T).ToString(), obj.name));
-
-            return t;
+            return Instantiate(value);
         }
 
         #endregion Instantiate

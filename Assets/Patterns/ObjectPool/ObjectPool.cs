@@ -131,7 +131,8 @@ namespace Game.Pattern
         /// </summary>
         protected virtual GameObject AddObject()
         {
-            GameObject obj = PrefabFactory.Instance.InstantiatePrefab<PooledObject>().gameObject;
+            // Note: Override this when created specific pool
+            GameObject obj = PrefabFactory.Instance.InstantiatePrefab(typeof(PooledObject));
             obj.transform.SetParent(this.transform);
             this._PooledObjects.Add(obj);
             return obj;
