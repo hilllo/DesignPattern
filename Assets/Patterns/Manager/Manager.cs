@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Game.Manager
+namespace Game.Pattern
 {
     public abstract class Manager<T> : MonoBehaviour
     {
