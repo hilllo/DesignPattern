@@ -6,7 +6,20 @@ namespace Game.Pattern
 {
     public class ObjectPool : MonoBehaviour
     {
-        #region Fields
+        public enum ObjectPoolType
+        {
+            BLOCK,  // Stop generating when the pool is full
+            RECYCLE // Recycle objects in pool based on their TimeStamp
+        }
+
+        #region Fields      
+
+        /// <summary>
+        /// Backing Field of Type
+        /// Warning: Using RECYCLE is expensive!!
+        /// </summary>
+        [SerializeField]
+        private ObjectPoolType _Type;
 
         /// <summary>
         /// The minimum amount of PooledObjects in the pool. 
@@ -23,13 +36,30 @@ namespace Game.Pattern
         private int _MaxSize;
 
         /// <summary>
+        /// Back Field of the PooledObjectType Property
+        /// Note: Override this while creating specific pool
+        /// </summary>
+        private System.Type _PooledObjectSystemType = typeof(PooledObject);
+
+        /// <summary>
         /// The List of the PooledObjects
         /// </summary>
-        private List<GameObject> _PooledObjects;
+        private List<GameObject> _PooledObjects;        
 
         #endregion Fields
 
         #region Properties
+
+        /// <summary>
+        /// The type of the PooledObject
+        /// </summary>
+        public System.Type PooledObjectSystemType
+        {
+            get
+            {
+                return this._PooledObjectSystemType;
+            }
+        }
 
         /// <summary>
         /// The Size of the pool
@@ -42,16 +72,24 @@ namespace Game.Pattern
             }
         }
 
+        /// <summary>
+        /// Type of the ObjectPool
+        /// </summary>
+        public ObjectPoolType Type
+        {
+            get
+            {
+                return this._Type;
+            }
+        }
+
         #endregion Properties
 
         #region MonoBehaviour
 
-        /// <summary>
-        /// Enable the instance
-        /// </summary>
-        protected virtual void OnEnable()
+        private void Start()
         {
-            this._PooledObjects = new List<GameObject>();
+            this._PooledObjects = new List<GameObject>(this._MinSize);
             GameObject obj;
 
             for (int i = 0; i < this._MinSize; i++)
@@ -59,6 +97,14 @@ namespace Game.Pattern
                 obj = this.AddObject();
                 obj.SetActive(false);
             }
+        }
+
+        /// <summary>
+        /// Disable the instance
+        /// </summary>
+        protected virtual void OnDisable()
+        {
+            this.DeactiveAll();
         }
 
         #endregion MonoBehaviour
@@ -108,30 +154,42 @@ namespace Game.Pattern
         private GameObject GetAvailablePooledObject()
         {
             int i;
+            GameObject obj = null;
             for (i = 0; i < this._PooledObjects.Count; i++)
             {
                 if (!this._PooledObjects[i].activeInHierarchy)
-                    return this._PooledObjects[i];
+                    obj = this._PooledObjects[i];
             }
 
-            if (i < this._MaxSize)
+            if (obj == null && i < this._MaxSize)
             {
-                GameObject obj = this.AddObject();
-                return obj;
+                obj = this.AddObject();
+                this._PooledObjects.Add(obj);
             }
 
-            Debug.Log(string.Format("Failed to instantiate more than {0} PooledObject in {1} on time: {2}", this._MaxSize.ToString(), this.gameObject.name, Time.time.ToString()));
-            return null;
+            if(obj == null)
+            {
+                if (this.Type == ObjectPoolType.BLOCK)
+                    Debug.Log(string.Format("Failed to instantiate more than {0} PooledObject in {1} on time: {2}", this._MaxSize.ToString(), this.gameObject.name, Time.time.ToString()));
+                if (this.Type == ObjectPoolType.RECYCLE)
+                    obj = this.transform.GetChild(0).gameObject;
+            }
+
+            // TODO: Needs optimization
+            if(this.Type == ObjectPoolType.RECYCLE && obj != null)
+                obj.transform.SetAsFirstSibling();
+
+            return obj;
         }
 
         #endregion Spawn
 
         /// <summary>
-        /// Add a new Object in the pool. Note: Override this method if the PooledObject is a subclass
+        /// Add a new Object in the pool.
         /// </summary>
         protected virtual GameObject AddObject()
         {
-            GameObject obj = PrefabFactory.Instance.InstantiatePrefab<PooledObject>().gameObject;
+            GameObject obj = PrefabFactory.Instance.InstantiatePrefab(this._PooledObjectSystemType);
             obj.transform.SetParent(this.transform);
             this._PooledObjects.Add(obj);
             return obj;
@@ -147,6 +205,21 @@ namespace Game.Pattern
                 if (obj.activeInHierarchy)
                     obj.SetActive(false);
             }
+        }
+
+        /// <summary>
+        /// Destory the pool and release all PooledObject
+        /// Warning: This pool is not available after calling this method!!!
+        /// </summary>
+        public void DestroyAll()
+        {
+            foreach(GameObject obj in this._PooledObjects)
+            {
+                Destroy(obj);
+            }
+
+            this._PooledObjects.Clear();
+            Destroy(this.gameObject);
         }
     }
 }

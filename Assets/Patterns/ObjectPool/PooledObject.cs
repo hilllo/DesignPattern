@@ -5,7 +5,7 @@ namespace Game.Pattern
 {
     public class PooledObject : MonoBehaviour
     {
-        public enum Type
+        public enum PooledObjectType
         {
             NONE = 0,       // Immortal
             LIFETIME = 1,   // Life determined by both lifetime
@@ -19,7 +19,7 @@ namespace Game.Pattern
         /// Backing Field of Type
         /// </summary>
         [SerializeField]
-        private Type _Type;
+        private PooledObjectType _Type;
 
         /// <summary>
         /// Backing Field of the Lifetime of this object. 
@@ -33,6 +33,21 @@ namespace Game.Pattern
         private float _OnEnableTimeStamp;
 
         #endregion Fields
+
+        #region Properties
+
+        /// <summary>
+        /// Type of this PooledObject
+        /// </summary>
+        public PooledObjectType Type
+        {
+            get
+            {
+                return this._Type;
+            }
+        }
+
+        #endregion Properties
 
         #region MonoBehaviour
 
@@ -60,17 +75,17 @@ namespace Game.Pattern
         /// </summary>
         private void CheckDeactive()
         {
-            if (this._Type == Type.NONE)
+            if (this._Type == PooledObjectType.NONE)
                 return;
 
-            if((this._Type & Type.LIFETIME ) != 0)
+            if((this._Type & PooledObjectType.LIFETIME ) != 0)
             {
                 // TODO: Use Global time from GameManager
                 if (Time.time - this._OnEnableTimeStamp > this._Lifetime)
                     this.gameObject.SetActive(false);
             }
 
-            if ((this._Type & Type.CONDITION) != 0)
+            if ((this._Type & PooledObjectType.CONDITION) != 0)
             {
                 if(this.CheckDeactiveCondition())
                     this.gameObject.SetActive(false);
