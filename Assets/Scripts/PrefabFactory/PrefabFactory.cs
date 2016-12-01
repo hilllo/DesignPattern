@@ -7,7 +7,8 @@ using System.Reflection;
 namespace Game
 {
     /// <summary>
-    /// Note: PrefabFactory prefab **HAS TO** be in the hierarchy of the first scene
+    /// Note:   Make sure to set PrefabFactory prefab into the first scene,
+    ///         or load ./Assets/Scene/Config.scene together with the first scene
     /// </summary>
     
     // TODO: So far cannot generated different prefabs with same component.
@@ -18,7 +19,7 @@ namespace Game
 
         // Example
         public PooledObject PooledObjectPrefab;
-        public GameObject PooledObjectGameObjectPrefab;
+        public GameObject ExampleGameObjectPrefab;
 
         #endregion Prefab Fields
 
@@ -55,52 +56,21 @@ namespace Game
         {
             System.Type type = typeof(T);
             UnityEngine.Object value;
-            if(!this.PrefabDictionary.TryGetValue(type, out value))
-                throw new System.ApplicationException(string.Format("Expected Field {0} has been set on PrefabFactory.", type.ToString()));
-
-            if (value == null)
-                throw new System.ApplicationException(string.Format("Expected Prefab {0} has been set on PrefabFactory.", type.ToString()));
-
-            GameObject instance = Instantiate(value) as GameObject;
-
-            return instance.GetComponent<T>();
-        }
-
-        public T Instantiate<T>(GameObject prefab) where T : UnityEngine.MonoBehaviour
-        {
-            GameObject newGameObject = Instantiate(prefab);
-            T component = newGameObject.GetComponent<T>();
-            if (component == null)
-                throw new System.ApplicationException(string.Format("Expected Component {0} on {1}", typeof(T).Name, prefab.name));
-
-            return component;
-        }
-
-        public UnityEngine.Object InstantiatePrefab<T>()
-        {
-            System.Type type = typeof(T);
-            UnityEngine.Object value;
             if (!this.PrefabDictionary.TryGetValue(type, out value))
                 throw new System.ApplicationException(string.Format("Expected Field {0} has been set on PrefabFactory.", type.ToString()));
 
             if (value == null)
                 throw new System.ApplicationException(string.Format("Expected Prefab {0} has been set on PrefabFactory.", type.ToString()));
 
-            UnityEngine.Object instance = Instantiate(value);
+            UnityEngine.Object obj = Instantiate(value);
 
-            MethodInfo awakeMethod = instance.GetType().GetMethod("Awake", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            if (awakeMethod != null)
-                awakeMethod.Invoke(instance, null);
+            return (T)obj;
+        }
 
-            MethodInfo startMethod = instance.GetType().GetMethod("Start", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            if (startMethod != null)
-                startMethod.Invoke(instance, null);
-
-            //MethodInfo onEnableMethod = instance.GetType().GetMethod("OnEnable", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            //if (onEnableMethod != null)
-            //    onEnableMethod.Invoke(instance, null);
-
-            return instance;
+        public GameObject InstantiatePrefab(GameObject gameObj)
+        {
+            GameObject obj = Instantiate(gameObj) as GameObject;
+            return obj;
         }
 
         #endregion Instantiate

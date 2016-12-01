@@ -14,6 +14,11 @@ namespace Example
         /// Serialize all pools in the project here
         /// </summary>
         #region Fields
+        /// <summary>
+        /// Used for testing
+        /// </summary>
+        [SerializeField]
+        private KeyCode _SpawnKey;
 
         /// <summary>
         /// Used for testing
@@ -28,9 +33,9 @@ namespace Example
         /// </summary>
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(this._SpawnKey))
             {
-                this.SphereObjectPool.Spawn();
+                this.SphereObjectPool.Spawn(new Vector3(UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f), UnityEngine.Random.Range(-10.0f, 10.0f)));
             }
         }
 

@@ -222,6 +222,10 @@ namespace Game.ObjectPool
             Destroy(this.gameObject);
         }
 
+        /// <summary>
+        /// Return subclass game object of the PooledObject. DO: return PrefabFactory.Instance.InstantiatePrefab(PrefabFactory.Instance.[SubclassGameObject]);
+        /// </summary>
+        /// <returns></returns>
         protected abstract GameObject InstantiatePooledObject();
     }    
 }

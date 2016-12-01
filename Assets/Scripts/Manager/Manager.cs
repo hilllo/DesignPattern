@@ -43,12 +43,12 @@ namespace Game.Manager
         #endregion MonoBehaviour
 
         /// <summary>
-        /// Do: T.Instance = this;
+        /// Return instance of current class. DO: T.Instance = this;
         /// </summary>
         protected abstract void SetInstance();
 
         /// <summary>
-        /// Do: T.Instance = null;
+        /// Return instance of current class. DO: T.Instance = null;
         /// </summary>
         protected abstract void ReleaseInstance();
     }

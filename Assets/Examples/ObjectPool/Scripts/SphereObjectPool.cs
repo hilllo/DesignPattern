@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
+using Game;
+using Game.ObjectPool;
 
-namespace Game.ObjectPool
+namespace Example
 {
     public class SphereObjectPool : ObjectPool
     {
         protected override GameObject InstantiatePooledObject()
         {
-            UnityEngine.Object obj = PrefabFactory.Instance.InstantiatePrefab<PooledObject>();
-            GameObject gameObj = obj as GameObject;
-            return gameObj;
+            return PrefabFactory.Instance.InstantiatePrefab(PrefabFactory.Instance.ExampleGameObjectPrefab);
         }
     }
 }
