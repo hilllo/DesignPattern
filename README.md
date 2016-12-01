@@ -9,23 +9,18 @@ Performance and function extensions for Unity (Ongoing)
 * PrefabFactory (Ongoing)
 
 ## TODO
-1. **PrefabFacotry** ADD: `T Instantialize<T>()`
-2. **ObjectPool** CHANGE: `AddObject()` adapts different PooledObject subclass
-3. **ObjectPool** ADD: Allow preset PooledObject list
-4. **Manager** CHANGE: `SetInstance()` throw expection when `Manager.Instance != null`
-5. ADD: **SequentialEvent** system
-6. CHANGE: Improve comments
+1. **ObjectPool** ADD: Allow optional preset PooledObject list
+2. **Manager** CHANGE: `SetInstance()` throw expection when `Manager.Instance != null`
+3. ADD: **SingleStepEvent** system
+4. CHANGE: Improve comments
 
 ## CHANGE LOG
-* v0.0.1
+* Update 120116
+ 1. **PrefabFacotry** ADD: `T Instantialize<T>()`
+ 2. **ObjectPool** CHANGE: `AddObject()` adapts different PooledObject subclass
+* v0.0.0
  * Initialized the project with **Singleton**, **Manager**, **ObjectPool** and **PrefabFactory**
- 
-## Contributing
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
+
 
 ## Credits
 * [Hill Lo](http://hilllo.com/) – hilllocanton@gmail.com
