@@ -13,7 +13,8 @@ Performance and function extensions for Unity (Ongoing)
 2. **ObjectPool** CHANGE: `AddObject()` adapts different PooledObject subclass
 3. **ObjectPool** ADD: Allow preset PooledObject list
 4. **Manager** CHANGE: `SetInstance()` throw expection when `Manager.Instance != null`
-5. CHANGE: Improve comments
+5. ADD: **SequentialEvent** system
+6. CHANGE: Improve comments
 
 ## CHANGE LOG
 * v0.0.1
