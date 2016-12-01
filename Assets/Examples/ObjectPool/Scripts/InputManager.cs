@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Game.Pattern;
+using Game;
+using Game.ObjectPool;
+using Game.Manager;
+using System;
 
 namespace Example
 {
-    public class ObjectPoolManager : Singleton<ObjectPoolManager>
+    public class InputManager : Manager<InputManager>
     {
         /// <summary>
         /// Serialize all pools in the project here
@@ -16,7 +19,7 @@ namespace Example
         /// Used for testing
         /// </summary>
         [SerializeField]
-        private ObjectPool SpherePool;
+        private SphereObjectPool SphereObjectPool;
 
         #endregion Fields
 
@@ -27,8 +30,19 @@ namespace Example
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                this.SpherePool.Spawn();
+                this.SphereObjectPool.Spawn();
             }
+        }
+
+
+        protected override void ReleaseInstance()
+        {
+            InputManager.Instance = null;
+        }
+
+        protected override void SetInstance()
+        {
+            InputManager.Instance = this;
         }
     }
 }

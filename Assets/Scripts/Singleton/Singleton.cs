@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Pattern
+namespace Game
 {
     /// <summary>
     /// Reference: http://wiki.unity3d.com/index.php/Singleton

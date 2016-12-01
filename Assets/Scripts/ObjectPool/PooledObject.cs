@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Game.Pattern
+namespace Game.ObjectPool
 {
     public class PooledObject : MonoBehaviour
     {

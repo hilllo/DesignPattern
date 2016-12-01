@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Game.Pattern
+namespace Game.Manager
 {
     public abstract class ActiveSceneManager<T> : Manager<T>
     {

@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Game.Pattern
+namespace Game.ObjectPool
 {
-    public class ObjectPool : MonoBehaviour
+    public abstract class ObjectPool : MonoBehaviour
     {
         public enum ObjectPoolType
         {
@@ -19,32 +19,32 @@ namespace Game.Pattern
         /// Warning: Using RECYCLE is expensive!!
         /// </summary>
         [SerializeField]
-        private ObjectPoolType _Type;
+        protected ObjectPoolType _Type;
 
         /// <summary>
         /// The minimum amount of PooledObjects in the pool. 
         /// Business Rule: The pool will be initialized within MinAmount size. If exceeded, the size will grow automatically until it reaches MaxAmount.
         /// </summary>
         [SerializeField]
-        private int _MinSize;
+        protected int _MinSize;
 
         /// <summary>
         /// The maximum amount of PooledObjects in the pool. Note: If MinAmount == MaxAmount, the size of the pool is not allowed to grow.
         /// Business Rule: The pool will be initialized within MinAmount size. If exceeded, the size will extend automatically until it reaches MaxAmount.
         /// </summary>
         [SerializeField]
-        private int _MaxSize;
+        protected int _MaxSize;
 
         /// <summary>
         /// Back Field of the PooledObjectType Property
         /// Note: Override this while creating specific pool
         /// </summary>
-        private System.Type _PooledObjectSystemType = typeof(PooledObject);
+        protected System.Type _PooledObjectSystemType;
 
         /// <summary>
         /// The List of the PooledObjects
         /// </summary>
-        private List<GameObject> _PooledObjects;        
+        protected List<GameObject> _PooledObjects;        
 
         #endregion Fields
 
@@ -87,7 +87,7 @@ namespace Game.Pattern
 
         #region MonoBehaviour
 
-        private void Start()
+        protected virtual void Start()
         {
             this._PooledObjects = new List<GameObject>(this._MinSize);
             GameObject obj;
@@ -151,7 +151,7 @@ namespace Game.Pattern
         /// <summary>
         /// Try to get an available PooledObject
         /// </summary>
-        private GameObject GetAvailablePooledObject()
+        protected GameObject GetAvailablePooledObject()
         {
             int i;
             GameObject obj = null;
@@ -189,7 +189,7 @@ namespace Game.Pattern
         /// </summary>
         protected virtual GameObject AddObject()
         {
-            GameObject obj = PrefabFactory.Instance.InstantiatePrefab(this._PooledObjectSystemType);
+            GameObject obj = this.InstantiatePooledObject();
             obj.transform.SetParent(this.transform);
             this._PooledObjects.Add(obj);
             return obj;
@@ -221,7 +221,9 @@ namespace Game.Pattern
             this._PooledObjects.Clear();
             Destroy(this.gameObject);
         }
-    }
+
+        protected abstract GameObject InstantiatePooledObject();
+    }    
 }
 
 
