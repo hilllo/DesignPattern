@@ -9,10 +9,10 @@ Performance and function extensions for Unity (Ongoing)
 * PrefabFactory (Ongoing)
 
 ## TODO
-1. **PrefabFacotry** ADD: 'T Instantialize<T>()'
-2. **ObjectPool** CHANGE: 'AddObject()' adapts different PooledObject subclass
+1. **PrefabFacotry** ADD: `T Instantialize<T>()`
+2. **ObjectPool** CHANGE: `AddObject()` adapts different PooledObject subclass
 3. **ObjectPool** ADD: Allow preset PooledObject list
-4. **Manager** CHANGE: 'SetInstance()' throw expection when 'Manager.Instance != null'
+4. **Manager** CHANGE: `SetInstance()` throw expection when `Manager.Instance != null`
 5. CHANGE: Improve comments
 
 ## CHANGE LOG
