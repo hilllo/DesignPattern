@@ -158,13 +158,16 @@ namespace Game.ObjectPool
             for (i = 0; i < this._PooledObjects.Count; i++)
             {
                 if (!this._PooledObjects[i].activeInHierarchy)
+                {
                     obj = this._PooledObjects[i];
+                    return obj;
+                }
             }
 
             if (obj == null && i < this._MaxSize)
             {
                 obj = this.AddObject();
-                this._PooledObjects.Add(obj);
+                return obj;
             }
 
             if(obj == null)
@@ -172,12 +175,15 @@ namespace Game.ObjectPool
                 if (this.Type == ObjectPoolType.BLOCK)
                     Debug.Log(string.Format("Failed to instantiate more than {0} PooledObject in {1} on time: {2}", this._MaxSize.ToString(), this.gameObject.name, Time.time.ToString()));
                 if (this.Type == ObjectPoolType.RECYCLE)
-                    obj = this.transform.GetChild(0).gameObject;
-            }
+                {
+                    obj = this._PooledObjects[0].gameObject;
 
-            // TODO: Needs optimization
-            if(this.Type == ObjectPoolType.RECYCLE && obj != null)
-                obj.transform.SetAsFirstSibling();
+                    // TODO: Needs optimization
+                    // Move the element to the first 
+                    this._PooledObjects.Remove(obj);
+                    this._PooledObjects.Add(obj);
+                }
+            }
 
             return obj;
         }
