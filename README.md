@@ -23,4 +23,4 @@ Performance and function extensions for Unity (Ongoing)
 
 
 ## Credits
-* [Hill Lo](http://hilllo.com/) – hilllocanton@gmail.com
+* [Hill Lo](http://hilllo.com/)
