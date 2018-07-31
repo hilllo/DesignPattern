@@ -20,7 +20,3 @@ Performance and function extensions for Unity (Ongoing)
  2. **ObjectPool** CHANGE: `AddObject()` adapts different PooledObject subclass
 * v0.0.0
  * Initialized the project with **Singleton**, **Manager**, **ObjectPool** and **PrefabFactory**
-
-
-## Credits
-* [Hill Lo](http://hilllo.com/)
